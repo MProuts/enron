@@ -1,6 +1,8 @@
 import os
 import codecs
 import pprint as pp
+import pickle
+from pathlib import Path
 
 class Indexer:
     @classmethod
@@ -24,13 +26,44 @@ class Indexer:
                     for row, line in enumerate(document):
                         for col, char in enumerate(line):
                             if char in whitespace_chars:
-                                if len(word) > 0:
-                                    if not word in index:
-                                        index[word] = set()
-                                    index[word].add((doc_path, row, col))
-                                    word = ""
-                            else:
-                                word += char
+                                word = ""
+                                continue
 
-            pp.pprint(index)
+                            word += char
+                            if len(word) <= 1:
+                                index_dir_path = f"{source_dir_path}/../cache/{'/'.join([*word])}"
+                            else:
+                                sub_word = word[:-1]
+                                index_dir_path = f"{source_dir_path}/../cache/{'/'.join([*sub_word])}"
+
+                            Path(index_dir_path).mkdir(parents=True, exist_ok=True)
+                            index_file_path = f"{index_dir_path}/index.pickle"
+
+                            if os.path.isfile(index_file_path):
+                                with open(f"{index_file_path}", 'rb') as index_file:
+                                    index = pickle.load(index_file)
+                            else:
+                                index = {}
+
+                            if word not in index:
+                                index[word] = set()
+                            index[word].add((doc_path, row, col))
+
+                            with open(f"{index_file_path}", 'wb') as index_file:
+                                pickle.dump(index, index_file, protocol=pickle.HIGHEST_PROTOCOL)
+
+                # break after one document
+                break
+
+            # break after one employee
             break
+
+    @classmethod
+    def search(self, word):
+        # TODO move magic number to instance property
+        dir_path = "/".join([*word[:3]])
+        file_path = f"cache/{dir_path}/index.pickle"
+
+        with open(file_path, 'rb') as index_file:
+            index = pickle.load(index_file)
+            pp.pprint(index[word])
