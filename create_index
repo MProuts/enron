@@ -5,4 +5,5 @@ import sys
 from indexer import Indexer
 
 source_path = sys.argv[1]
-Indexer.create_index(source_path)
+indexer = Indexer()
+indexer.create_index(source_path)
