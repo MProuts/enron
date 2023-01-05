@@ -1,3 +1,6 @@
 maildir
 __pycache__
-cache
+index
+cache/
+cache*/
+.DS_Store
