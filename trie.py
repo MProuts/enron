@@ -2,7 +2,6 @@ class Trie:
     def __init__(self):
         self.root = {}
 
-
     def add_word(self, word):
         current = self.root
         for char in word:
