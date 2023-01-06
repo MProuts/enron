@@ -19,9 +19,9 @@ unzip cache.zip
 ```
 
 ## Summary
-
-The cache stores the path and position of each occurance of a given word in a
-separate file. For example, the cache file for the word 'puppy' looks like this:
+The cache is built by the `CacheGenerator` class. The cache stores the path and
+position of each occurance of a given word in a separate file. For example, the
+cache file for the word 'puppy' looks like this:
 
 **cache/puppy.csv**
 ```csv
@@ -31,7 +31,7 @@ maildir/kaminski-v/all_documents/5861.,1009
 ```
 
 While the cache is built, a [trie](https://en.wikipedia.org/wiki/Trie) is also
-created and saved in `cache/trie.pickle`. The search engine loads this trie on
+created and saved in `cache/trie.pickle`. The `CacheSearchEngine` class loads this trie on
 initialization (once for each cli session) and uses it to determine which
 complete words exist for a given prefix. Results each of those words can then be
 read directly from `cache/<word>.csv`.
